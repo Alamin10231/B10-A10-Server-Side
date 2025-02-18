@@ -20,7 +20,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    
     app.get("/", (req, res) => {
       res.send(" client site movie check out");
     });
@@ -30,65 +29,56 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-    
-    app.get('/movie/:id',async(req,res)=>{
+
+    app.get("/movie/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id)
-      const query = {_id: new ObjectId(id)}
-      console.log(query)
-      const result = await moviecollection.findOne(query)
-      res.send(result)
-      console.log(result)
-    })
-    app.post('/movie',async(req,res)=>{
+
+      const query = { _id: new ObjectId(id) };
+
+      const result = await moviecollection.findOne(query);
+      res.send(result);
+    });
+    app.post("/movie", async (req, res) => {
       const newmovie = req.body;
-      console.log(newmovie)
-      const result = await moviecollection.insertOne(newmovie)
-      res.send(result)
-    })
 
-    app.delete('/movie/:id',async(req,res)=>{
-      const id = req.params.id
-      const cursor = {_id:new ObjectId(id)}
-      const result = await moviecollection.deleteOne(cursor)
-      res.send(result)
-    })
+      const result = await moviecollection.insertOne(newmovie);
+      res.send(result);
+    });
 
-    app.get('/movie/:id',async(req,res)=>{
-      const id= req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const result =  await moviecollection.updateOne(query)
-      res.send(result)
-    })
-    app.put('/movie/:id',async(req,res)=>{
+    app.delete("/movie/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const option = {upsert:true}
-      const updatedmovie = req.body
-      const Movie= {
-        $set:{
-         imagelink:updatedmovie.imagelink,
-         imagelink:updatedmovie.imagelink,
-          movietitle:updatedmovie.movietitle,
-          genre:updatedmovie.genre,
-           duration:updatedmovie.duration, 
-           rating:updatedmovie.rating, 
-           summary:updatedmovie.summary,
-            releaseYear :updatedmovie.releaseYear
-        }
-      }
-      const result = await moviecollection.updateOne(query,Movie,option)
-      res.send(result)
-    })
+      const cursor = { _id: new ObjectId(id) };
+      const result = await moviecollection.deleteOne(cursor);
+      res.send(result);
+    });
 
-    
-
-  
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    app.get("/movie/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await moviecollection.updateOne(query);
+      res.send(result);
+    });
+    app.put("/movie/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const updatedmovie = req.body;
+      const Movie = {
+        $set: {
+          imagelink: updatedmovie.imagelink,
+          imagelink: updatedmovie.imagelink,
+          movietitle: updatedmovie.movietitle,
+          genre: updatedmovie.genre,
+          duration: updatedmovie.duration,
+          rating: updatedmovie.rating,
+          summary: updatedmovie.summary,
+          releaseYear: updatedmovie.releaseYear,
+        },
+      };
+      const result = await moviecollection.updateOne(query, Movie, option);
+      res.send(result);
+    });
   } finally {
- 
   }
 }
 run().catch(console.dir);
